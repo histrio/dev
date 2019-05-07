@@ -1,0 +1,11 @@
+version: '3'
+services:
+  web:
+    image: histrio/devdocker:latest
+    ports:
+     - "8023:22"
+     - 60001
+    volumes:
+        - "/projects:/projects"
+
+
