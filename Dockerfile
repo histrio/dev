@@ -33,6 +33,8 @@ RUN git clone https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh && \
 RUN git clone https://github.com/powerline/fonts.git --depth=1 && \
     cd fonts && ./install.sh && cd .. && rm -rf fonts
 
+RUN rpm -Uvh --nodeps $(repoquery --location rxvt-unicode)
+
 EXPOSE 22/tcp
 EXPOSE 60001/udp
 

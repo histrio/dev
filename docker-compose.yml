@@ -4,7 +4,7 @@ services:
     image: histrio/devdocker:latest
     ports:
      - "8023:22"
-     - "60001:60001"
+     - "60001:60001/udp"
     volumes:
         - "/projects:/projects"
 
