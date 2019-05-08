@@ -10,6 +10,7 @@ RUN yum -y install openssh-server vim tmux zsh mosh openssh-clients \
 
 USER root
 RUN ssh-keygen -A && usermod -s /usr/bin/zsh root
+RUN ssh-keygen -f /root/.ssh/id_rsa -t rsa -N ''
 
 RUN localedef -i en_US -f UTF-8 en_US.UTF-8
 ENV TERM=xterm-256color LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
@@ -33,9 +34,11 @@ RUN git clone https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh && \
 RUN git clone https://github.com/powerline/fonts.git --depth=1 && \
     cd fonts && ./install.sh && cd .. && rm -rf fonts
 
-RUN rpm -Uvh --nodeps $(repoquery --location rxvt-unicode)
+#RUN rpm -Uvh --nodeps $(repoquery --location rxvt-unicode)
+
+RUN yum -y install git-review ansible virtualenv
 
 EXPOSE 22/tcp
-EXPOSE 60001/udp
+EXPOSE 60000-61000/udp
 
 ENTRYPOINT ["/usr/sbin/sshd", "-De"]
