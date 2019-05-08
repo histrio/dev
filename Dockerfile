@@ -18,11 +18,12 @@ ENV TERM=xterm-256color LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF
 RUN ln -s --force /usr/share/zoneinfo/Europe/Moscow /etc/localtime
 
 RUN git config --global user.email rsabitov@cloudlinux.com && git config --global user.name Rinat Sabitov
+RUN wget "https://www.dropbox.com/s/15rjnc0l7y0c487/.gitconfig?dl=1" -O ~/.gitconfig
 
 COPY authorized_keys /root/.ssh/authorized_keys
 RUN chmod 600 ~/.ssh/authorized_keys
 
-RUN wget https://www.dropbox.com/s/c1rl3w5kna7qnmb/.vimrc?dl=1 -O ~/.vimrc && \
+RUN wget "https://www.dropbox.com/s/c1rl3w5kna7qnmb/.vimrc?dl=1" -O ~/.vimrc && \
     git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim && \
     vim +PluginInstall +qall chdir=/tmp 700fcc04-759d-4573-9c74-52d0464f4df7 > /dev/null
 
@@ -36,7 +37,7 @@ RUN git clone https://github.com/powerline/fonts.git --depth=1 && \
 
 #RUN rpm -Uvh --nodeps $(repoquery --location rxvt-unicode)
 
-RUN yum -y install git-review ansible virtualenv
+RUN pip install git-review ansible virtualenv
 
 EXPOSE 22/tcp
 EXPOSE 60000-61000/udp
