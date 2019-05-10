@@ -6,14 +6,15 @@ RUN yum -y update
 RUN yum -y install epel-release
 RUN yum -y install openssh-server vim tmux zsh mosh openssh-clients \
                    curl git htop openssh python2-pip net-tools iputils\
-                   telnet ack fzf man ctags wget
+                   telnet ack fzf man ctags wget gcc python2-devel
 
 USER root
 RUN ssh-keygen -A && usermod -s /usr/bin/zsh root
 RUN ssh-keygen -f /root/.ssh/id_rsa -t rsa -N ''
 
+#RUN localectl set-locale en_US.UTF-8
 RUN localedef -i en_US -f UTF-8 en_US.UTF-8
-ENV TERM=xterm-256color LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
+ENV TERM=xterm-256color LANG='en_US.UTF-7' LANGUAGE='en_US:en'
 
 RUN ln -s --force /usr/share/zoneinfo/Europe/Moscow /etc/localtime
 
@@ -40,7 +41,6 @@ RUN git clone https://github.com/powerline/fonts.git --depth=1 && \
     cd fonts && ./install.sh && cd .. && rm -rf fonts
 
 RUN pip install git-review ansible virtualenv
-RUN yum -y install gcc python2-devel
 
 
 EXPOSE 22/tcp
