@@ -1,3 +1,3 @@
 # devdocker
 
-So, there is no so much. Just a dev environment for very me - python devloper on vim.
+So, there is not so much. Just a dev environment for very me - python developer on vim.
