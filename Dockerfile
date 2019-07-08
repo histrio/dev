@@ -33,15 +33,13 @@ RUN curl "https://www.dropbox.com/s/c1rl3w5kna7qnmb/.vimrc?dl=1" > ~/.vimrc && \
 RUN curl "https://www.dropbox.com/s/xwy9cs2vca0jrnu/.tmux.conf?dl=1" > ~/.tmux.conf
 
 #Oh my zsh
-RUN git clone https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh && \
-    cp ~/.oh-my-zsh/templates/zshrc.zsh-template ~/.zshrc
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 
 # Powerline fonts
 RUN git clone https://github.com/powerline/fonts.git --depth=1 && \
     cd fonts && ./install.sh && cd .. && rm -rf fonts
 
 RUN pip install git-review ansible virtualenv
-
 
 EXPOSE 22/tcp
 EXPOSE 60000-61000/udp
