@@ -6,6 +6,6 @@ services:
      - "8023:22"
      - "60000-60100:60000-60100/udp"
     volumes:
-        - "/projects:/projects"
+        - "~/projects:/projects"
 
 

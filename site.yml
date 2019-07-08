@@ -1,0 +1,16 @@
+- hosts: all
+
+  vars:
+    pip_install_packages:
+      - name: docker
+      - name: docker-compose
+
+  roles:
+    - geerlingguy.repo-epel
+    - geerlingguy.pip
+    - geerlingguy.docker
+
+  tasks:
+    - copy: src=docker-compose.yml dest=~/
+    - file: path=~/projects state=directory
+    - command: docker-compose up -d
