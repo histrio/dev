@@ -1,0 +1,13 @@
+.PHONY: ssh, deploy, pub, build
+
+build:
+	docker build -t histrio/devdocker:latest .
+
+pub:
+	docker push histrio/devdocker:latest
+
+ssh:
+	mosh --ssh="ssh -i ~/.ssh/cl -p 8023" -- root@$(DEVSERVER) tmux new -A -s remote
+
+deploy:
+	ansible-playbook site.yml -i $(DEVSERVER), -e ansible_user=root
