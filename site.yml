@@ -1,0 +1,17 @@
+- hosts: all
+
+  vars:
+    docker_install_compose: true
+
+  roles:
+    - geerlingguy.repo-epel
+    - geerlingguy.pip
+    - geerlingguy.docker
+
+  tasks:
+    - firewalld: service=mosh permanent=yes state=enabled
+    - firewalld: port=8023/tcp permanent=yes state=enabled
+    - copy: src=docker-compose.yml dest=~/
+    - file: path=~/projects state=directory
+    - command: docker-compose pull
+    - command: docker-compose up --force-recreate -d
