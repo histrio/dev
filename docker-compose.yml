@@ -1,11 +1,13 @@
 version: '3'
 services:
   web:
+    build: .
     image: histrio/devdocker:latest
     ports:
      - "8023:22"
      - "60000-60100:60000-60100/udp"
     volumes:
         - "~/projects:/projects"
+    hostname: dev
 
 

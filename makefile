@@ -10,4 +10,5 @@ ssh:
 	mosh --ssh="ssh -i ~/.ssh/cl -p 8023" -- root@$(DEVSERVER) tmux new -A -s remote
 
 deploy:
+	ansible-galaxy role install geerlingguy.repo-epel geerlingguy.pip geerlingguy.docker
 	ansible-playbook site.yml -i $(DEVSERVER), -e ansible_user=root
