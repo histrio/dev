@@ -7,7 +7,7 @@ pub:
 	docker push histrio/devdocker:latest
 
 ssh:
-	mosh --ssh="ssh -i ~/.ssh/cl -p 8023" -- root@$(DEVSERVER) tmux new -A -s remote
+	mosh --ssh="ssh -i ~/.ssh/cl -p 8023" -- histrio@$(DEVSERVER) tmux new -A -s remote
 
 deploy:
 	ansible-playbook site.yml -i $(DEVSERVER), -e ansible_user=root

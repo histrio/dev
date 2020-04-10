@@ -1,6 +1,7 @@
 version: '3'
 services:
   web:
+    build: .
     image: histrio/devdocker:latest
     ports:
      - "8023:22"
