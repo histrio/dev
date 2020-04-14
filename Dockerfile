@@ -36,10 +36,11 @@ RUN yum -y update && \
     ln -s --force /usr/share/zoneinfo/Europe/Moscow /etc/localtime && \
     ssh-keygen -A
 
-ENTRYPOINT ["/usr/sbin/sshd", "-De", "-p", "8023"]
+ENTRYPOINT ["/usr/sbin/sshd", "-De"]
+EXPOSE 22/tcp 80/tcp 60000-61000/udp 8000-9000/tcp
 
 USER ${USER}
-WORKDIR /home/%{USER}
+WORKDIR /home/${USER}
 COPY --chown=${USER}:${USER} authorized_keys /home/${USER}/.ssh/authorized_keys
 RUN ssh-keygen -f ~/.ssh/id_rsa -t rsa -N '' && \
     chmod 600 ~/.ssh/authorized_keys && \
@@ -47,14 +48,7 @@ RUN ssh-keygen -f ~/.ssh/id_rsa -t rsa -N '' && \
     git clone https://github.com/powerline/fonts.git /tmp/fonts --depth=1 && \
     /tmp/fonts/install.sh && rm -rf /tmp/fonts && \
     git clone "https://github.com/histrio/dotfiles.git" ~/dotfiles && \
-    shopt -s dotglob && ln -sfv ~/dotfiles/* ~/  
-    #&& \
-    #git clone "https://github.com/VundleVim/Vundle.vim.git" ~/.vim/bundle/Vundle.vim && \
-    #vim +PluginInstall +qall chdir=/tmp > /dev/null
-
-EXPOSE 22/tcp
-EXPOSE 80/tcp
-EXPOSE 8000-9999/tcp
-EXPOSE 60000-61000/udp
-
+    shopt -s dotglob && ln -sfv ~/dotfiles/* ~/ && \
+    git clone "https://github.com/VundleVim/Vundle.vim.git" ~/.vim/bundle/Vundle.vim && \
+    vim +PluginInstall +qall chdir=/tmp > /dev/null
 USER root
