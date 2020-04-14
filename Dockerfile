@@ -3,10 +3,32 @@ FROM centos:7
 LABEL MAINTAINER="histrio <rinat.sabitov@gmail.com>"
 ARG USER=histrio
 
-COPY requirements.txt bootstrap.sh /tmp/
 RUN yum -y update && \
     yum -y install epel-release && \
-    yum -y install $(cat /tmp/requirements.txt) && \
+    yum-config-manager --add-repo=https://copr.fedorainfracloud.org/coprs/carlwgeorge/ripgrep/repo/epel-7/carlwgeorge-ripgrep-epel-7.repo && \
+    yum -y install \
+        openssh-server \
+        vim \
+        tmux \
+        zsh \
+        mosh \
+        openssh-clients \
+        curl \
+        git \
+        htop \
+        openssh \
+        python2-pip \
+        net-tools \
+        iputils \
+        telnet \
+        ack \
+        fzf \
+        man \
+        ctags \
+        wget \
+        gcc \
+        python2-devel \
+        ripgrep && \
     pip install git-review ansible virtualenv && \
     useradd ${USER} -G wheel && \
     usermod -s /usr/bin/zsh ${USER} && \
@@ -14,25 +36,25 @@ RUN yum -y update && \
     ln -s --force /usr/share/zoneinfo/Europe/Moscow /etc/localtime && \
     ssh-keygen -A
 
-    # git clone https://gist.github.com/56d80c4f2f560953515014d3ab51c128.git /tmp/authorized_keys && \
-    # cp /tmp/authorized_keys/authorized_keys ~ && \
+ENTRYPOINT ["/usr/sbin/sshd", "-De", "-p", "8023"]
 
 USER ${USER}
 WORKDIR /home/%{USER}
-COPY authorized_keys /home/${USER}/.ssh/authorized_keys
-RUN ssh-keygen -f /home/${USER}/.ssh/id_rsa -t rsa -N '' && \
+COPY --chown=${USER}:${USER} authorized_keys /home/${USER}/.ssh/authorized_keys
+RUN ssh-keygen -f ~/.ssh/id_rsa -t rsa -N '' && \
     chmod 600 ~/.ssh/authorized_keys && \
-    git config --global user.email rinat.sabitov@gmail.com && \
-    git config --global user.name Rinat Sabitov && \
-    git clone https://github.com/histrio/dotfiles.git && \
-    ln -s dotfiles/* ~/ && \
-    git clone "https://github.com/VundleVim/Vundle.vim.git" ~/.vim/bundle/Vundle.vim && \
-    vim +PluginInstall +qall chdir=/tmp > /dev/null && \
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" && \
-    git clone https://github.com/powerline/fonts.git --depth=1 && \
-    cd fonts && ./install.sh && cd .. && rm -rf fonts
+    git clone https://github.com/powerline/fonts.git /tmp/fonts --depth=1 && \
+    /tmp/fonts/install.sh && rm -rf /tmp/fonts && \
+    git clone "https://github.com/histrio/dotfiles.git" ~/dotfiles && \
+    shopt -s dotglob && ln -sfv ~/dotfiles/* ~/  
+    #&& \
+    #git clone "https://github.com/VundleVim/Vundle.vim.git" ~/.vim/bundle/Vundle.vim && \
+    #vim +PluginInstall +qall chdir=/tmp > /dev/null
 
 EXPOSE 22/tcp
+EXPOSE 80/tcp
+EXPOSE 8000-9999/tcp
 EXPOSE 60000-61000/udp
 
-ENTRYPOINT ["/usr/sbin/sshd", "-De"]
+USER root
