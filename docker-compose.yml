@@ -3,13 +3,12 @@ services:
   dev:
     build: .
     image: histrio/devdocker:latest
-    #ports:
-     #- "8023:22"
-     #- "60000-60100:60000-60100/udp"
+    ports:
+      - "8023:22"
+      - "60000-60100:60000-60100/udp"
     volumes:
-        - workspace:/workspace
+        - workspace:/home/histrio/workspace
     hostname: dev
-    network_mode: "host"
 
 volumes:
   workspace:

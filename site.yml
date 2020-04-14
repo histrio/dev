@@ -14,5 +14,5 @@
     - firewalld: port=8023/tcp permanent=yes state=enabled
     - copy: src=docker-compose.yml dest=~/
     - file: path=/workspace state=directory
-    - command: docker-compose build
+    - command: docker-compose pull
     - command: docker-compose up --force-recreate -d
