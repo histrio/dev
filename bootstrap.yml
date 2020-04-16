@@ -1,0 +1,6 @@
+---
+
+- hosts: all
+  tasks:
+    - yum: name='ansible' enablerepo='epel'
+    - cron: minute="15" job="ansible-pull -d /tmp -U git://github.com/histrio/devdocker >>/var/log/ansible-pull.log 2>&1"

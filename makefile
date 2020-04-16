@@ -11,4 +11,4 @@ ssh:
 
 deploy:
 	ansible-galaxy role install geerlingguy.repo-epel geerlingguy.pip geerlingguy.docker
-	ansible-playbook site.yml -i $(DEVSERVER), -e ansible_user=root
+	ansible-playbook bootstrap.yml -i $(DEVSERVER), -e ansible_user=root
