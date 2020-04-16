@@ -7,8 +7,7 @@ pub:
 	docker push histrio/devdocker:latest
 
 ssh:
-	mosh --ssh="ssh -i ~/.ssh/cl -p 8023" -- histrio@$(DEVSERVER) tmux new -A -s remote
+	mosh --ssh="ssh -i ~/.ssh/cl" -- histrio@$(DEVSERVER) tmux new -A -s remote
 
 deploy:
-	ansible-galaxy role install geerlingguy.repo-epel geerlingguy.pip geerlingguy.docker
 	ansible-playbook bootstrap.yml -i $(DEVSERVER), -e ansible_user=root
