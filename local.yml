@@ -97,6 +97,7 @@
         - .vimrc
         - .p10k.zsh
         - .tmux.conf
+        - .wakatime.cfg
     - name: SSH config
       copy:
         src: /tmp/dotfiles/.ssh/config
@@ -162,9 +163,15 @@
         creates: "~/.cargo/bin/{{ item.bin | default(item.name) }}"
       with_items:
         - {name: exa}
+        - {name: tldr}
         - {name: ripgrep, bin: rg}
         - {name: bat}
         - {name: bb}
+        - {name: ffsend}
+        - {name: hyperfine}
+        - {name: just}
+        - {name: drill}
+        - {name: autojump-rs}
         - {name: du-dust, bin: dust}
         - {name: fd-find, bin: fd}
         #- {name: dot, path: "https://github.com/ubnt-intrepid/dot.git"}
