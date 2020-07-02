@@ -28,6 +28,7 @@
           - logrotate
           - clang-libs
           - make
+          - openssl-devel
     - pip:
         name:
           - virtualenv
@@ -70,6 +71,7 @@
       git:
         repo: https://github.com/gpakosz/.tmux.git
         dest: /tmp/tmux/
+        depth: 1
     - copy:
         src: /tmp/tmux/{{ item }}
         dest: ~/{{ item }}
@@ -122,7 +124,6 @@
       command:
         cmd: vim +PluginInstall +qall chdir=/tmp > /dev/null
         creates: ~/.vim/bundle/fzf
-
     - name: Install p10k zsh theme
       git:
         repo: https://github.com/romkatv/powerlevel10k.git
@@ -178,11 +179,10 @@
         - {name: ripgrep, bin: rg}
         - {name: bat}
         - {name: bb}
-        - {name: ffsend}
         - {name: hyperfine}
         - {name: just}
-        - {name: drill}
         - {name: autojump}
         - {name: du-dust, bin: dust}
         - {name: fd-find, bin: fd}
-        #- {name: dot, path: "https://github.com/ubnt-intrepid/dot.git"}
+        - {name: ffsend}
+        - {name: drill}
