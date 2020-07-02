@@ -175,7 +175,7 @@
         creates: "~/.cargo/bin/{{ item.bin | default(item.name) }}"
       with_items:
         - {name: exa}
-        - {name: tldr}
+        - {name: tealdeer, bin: tldr}
         - {name: ripgrep, bin: rg}
         - {name: bat}
         - {name: bb}
