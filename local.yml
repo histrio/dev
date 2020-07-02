@@ -66,6 +66,17 @@
         content: "{{ lookup('file', 'ssh.yml') }}"
         dest: ~/.ssh/cl
         mode: 0600
+    - name: Install oh-my-tmux
+      git:
+        repo: https://github.com/gpakosz/.tmux.git
+        dest: /tmp/tmux/
+    - copy:
+        src: /tmp/tmux/{{ item }}
+        dest: ~/{{ item }}
+        force: yes
+      with_items:
+        - .tmux.conf
+        - .tmux.conf.local
     - name: Install oh-my-zsh
       get_url:
         url: https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh
@@ -96,7 +107,6 @@
         - .zshrc
         - .vimrc
         - .p10k.zsh
-        - .tmux.conf
         - .wakatime.cfg
     - name: SSH config
       copy:
@@ -142,6 +152,7 @@
         - /tmp/dotfiles
         - /tmp/ohmyzsh-install.sh
         - /tmp/fonts
+        - /tmp/tmux
 
 - hosts: all
   become: yes
@@ -171,7 +182,7 @@
         - {name: hyperfine}
         - {name: just}
         - {name: drill}
-        - {name: autojump-rs}
+        - {name: autojump}
         - {name: du-dust, bin: dust}
         - {name: fd-find, bin: fd}
         #- {name: dot, path: "https://github.com/ubnt-intrepid/dot.git"}
