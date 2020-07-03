@@ -171,18 +171,18 @@
         creates: ~/.cargo/bin/rustup
     - name: Install {{ item.name }}
       command:
-        cmd: "cargo install {{ item.path | default(item.name) }}"
-        creates: "~/.cargo/bin/{{ item.bin | default(item.name) }}"
+        cmd: "cargo install {{ item }}"
       with_items:
-        - {name: exa}
-        - {name: tealdeer, bin: tldr}
-        - {name: ripgrep, bin: rg}
-        - {name: bat}
-        - {name: bb}
-        - {name: hyperfine}
-        - {name: just}
-        - {name: autojump}
-        - {name: du-dust, bin: dust}
-        - {name: fd-find, bin: fd}
-        - {name: ffsend}
-        - {name: drill}
+        - bb
+        - exa
+        - tealdeer
+        - ripgrep
+        - bat
+        - bb
+        - hyperfine
+        - just
+        - autojump
+        - du-dust
+        - fd-find
+        - ffsend
+        - drill
