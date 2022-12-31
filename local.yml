@@ -1,0 +1,122 @@
+- hosts: all
+  become: yes
+  become_user: root
+  tasks:
+    - hostname: name=dev
+    - firewalld: service={{ item }} permanent=yes state=enabled
+      with_items: [http, https, mosh, ssh]
+    - yum:
+        enablerepo: epel
+        name:
+          - openssh-server
+          - vim
+          - tmux
+          - zsh
+          - mosh
+          - openssh-clients
+          - curl
+          - git
+          - htop
+          - openssh
+          - python2-pip
+          - net-tools
+          - iputils
+          - telnet
+          - man
+          - ctags
+          - wget
+          - gcc
+          - python2-devel
+          - logrotate
+          - clang-libs
+          - make
+          - openssl-devel
+    - pip:
+        name:
+          - virtualenv
+          - pip
+          - pipx
+        state: latest
+    - name: Logrotate config
+      copy:
+        dest: /etc/logrotate.d/ansible-pull
+        content: |
+          /var/log/ansible-pull.log {
+            rotate 7
+            daily
+            compress
+            missingok
+            notifempty
+          }
+    - name: Add the user
+      user:
+        name: histrio
+        group: wheel
+        shell: /usr/bin/zsh
+    - name: Set authorized keys
+      authorized_key:
+        state: present
+        user: histrio
+        key: https://github.com/histrio.keys
+    - timezone: name=Europe/Moscow
+
+- hosts: all
+  become: yes
+  become_user: histrio
+  tasks:
+    - name: Install oh-my-tmux
+      git:
+        repo: https://github.com/gpakosz/.tmux.git
+        dest: ~/.tmux
+        depth: 1
+    - file:
+        src: ~/.tmux/{{ item }}
+        dest: ~/{{ item }}
+        state: link
+      with_items:
+        - .tmux.conf
+        - .tmux.conf.local
+    - name: Install {{ item.name }}
+      command:
+        cmd: /usr/local/bin/pipx install {{ item.name }}
+        creates: ~/.local/bin/{{ item.bin | default(item.name) }}
+      with_items:
+        - {name: awscli, bin: aws}
+        - {name: ansible-base, bin: ansible}
+        - {name: git-review}
+        - {name: bpytop}
+        - {name: poetry}
+
+- hosts: all
+  become: yes
+  become_user: histrio
+  environment:
+    PATH: /home/histrio/.cargo/bin:{{ ansible_env.PATH }}
+  tasks:
+    - name: Download rust install script
+      get_url:
+        url: https://sh.rustup.rs
+        dest: /tmp/rustup.sh
+    - name: Install rustup
+      command:
+        cmd: bash /tmp/rustup.sh -y
+        creates: ~/.cargo/bin/rustup
+    - name: Install {{ item.name }}
+      command:
+        cmd: "cargo install {{ item }}"
+      with_items:
+        - bb
+        - exa
+        - tealdeer
+        - ripgrep
+        - bat
+        - bb
+        - hyperfine
+        - just
+        - autojump
+        - du-dust
+        - fd-find
+        - drill
+        - topgrage
+        - cargo-update
+        - zoxide
