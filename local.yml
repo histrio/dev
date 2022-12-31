@@ -1,4 +1,6 @@
 - hosts: all
+  become: yes
+  become_user: root
   tasks:
     - hostname: name=dev
     - firewalld: service={{ item }} permanent=yes state=enabled
@@ -62,98 +64,28 @@
   become: yes
   become_user: histrio
   tasks:
-    - name: SSH keys
-      copy:
-        content: "{{ lookup('file', 'ssh.yml') }}"
-        dest: ~/.ssh/cl
-        mode: 0600
     - name: Install oh-my-tmux
       git:
         repo: https://github.com/gpakosz/.tmux.git
-        dest: /tmp/tmux/
+        dest: ~/.tmux
         depth: 1
-    - copy:
-        src: /tmp/tmux/{{ item }}
+    - file:
+        src: ~/.tmux/{{ item }}
         dest: ~/{{ item }}
-        force: yes
+        state: link
       with_items:
         - .tmux.conf
         - .tmux.conf.local
-    - name: Install oh-my-zsh
-      get_url:
-        url: https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh
-        dest: /tmp/ohmyzsh-install.sh
-    - command:
-        cmd: bash /tmp/ohmyzsh-install.sh
-        creates: ~/.oh-my-zsh/
-    - name: Install fonts
-      git:
-        repo: https://github.com/powerline/fonts.git
-        dest: /tmp/fonts
-        depth: 1
-    - command:
-        cmd: bash /tmp/fonts/install.sh
-        creates: /tmp
-    - git:
-        repo: https://github.com/histrio/dotfiles.git
-        dest: /tmp/dotfiles
-        depth: 1
-    - name: Dotfiles
-      copy:
-        src: /tmp/dotfiles/{{ item }}
-        dest: ~/{{ item }}
-        force: yes
-      with_items:
-        - .gitconfig
-        - .gitignore
-        - .zshrc
-        - .vimrc
-        - .p10k.zsh
-        - .wakatime.cfg
-    - name: SSH config
-      copy:
-        src: /tmp/dotfiles/.ssh/config
-        dest: ~/.ssh/config
-        force: yes
-    - name: Install Vundle for vim
-      git:
-        repo: https://github.com/VundleVim/Vundle.vim.git
-        dest: ~/.vim/bundle/Vundle.vim
-        depth: 1
-    - name: Install vim plugins
-      command:
-        cmd: vim +PluginInstall +qall chdir=/tmp > /dev/null
-        creates: ~/.vim/bundle/fzf
-    - name: Install p10k zsh theme
-      git:
-        repo: https://github.com/romkatv/powerlevel10k.git
-        dest: ~/.oh-my-zsh/themes/powerlevel10k
-        depth: 1
-    - name: Install fzf
-      git:
-        repo: https://github.com/junegunn/fzf.git
-        dest: ~/.fzf
-        depth: 1
-    - command:
-        cmd: ~/.fzf/install --no-zsh
-        creates: ~/.fzf/bin/fzf
     - name: Install {{ item.name }}
       command:
         cmd: /usr/local/bin/pipx install {{ item.name }}
         creates: ~/.local/bin/{{ item.bin | default(item.name) }}
       with_items:
         - {name: awscli, bin: aws}
-        - {name: ansible}
+        - {name: ansible-base, bin: ansible}
         - {name: git-review}
-    - name: Remove temp files
-      file:
-        path: "{{ item }}"
-        state: absent
-      with_items:
-        - /tmp/dotfiles
-        - /tmp/ohmyzsh-install.sh
-        - /tmp/fonts
-        - /tmp/tmux
+        - {name: bpytop}
+        - {name: poetry}
 
 - hosts: all
   become: yes
@@ -184,5 +116,7 @@
         - autojump
         - du-dust
         - fd-find
-        - ffsend
         - drill
+        - topgrage
+        - cargo-update
+        - zoxide
