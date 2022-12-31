@@ -7,4 +7,4 @@
   tasks:
     - yum: name=epel-release state=present
     - yum: name=ansible,git enablerepo=epel
-    - cron: name='ansible-pull' hour="15" job="ansible-pull -U https://github.com/histrio/devdocker -C master -i 127.0.0.1, >>/var/log/ansible-pull.log 2>&1"
+    - cron: name='ansible-pull' hour="15" job="ansible-pull -U https://github.com/histrio/dev -C master -i 127.0.0.1, >>/var/log/ansible-pull.log 2>&1"
